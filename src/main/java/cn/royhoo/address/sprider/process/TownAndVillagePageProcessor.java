@@ -22,8 +22,46 @@ public class TownAndVillagePageProcessor implements PageProcessor {
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
 
     public void process(Page page) {
-//        List<String> provicesInfo = page.getHtml().xpath("//tr[@class='provincetr']").all();
-        page.putField("url", page.getHtml().links().regex("http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016.*").all());
+        page.addTargetRequests(page.getHtml().links().regex("http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016.*").all());
+        List<String> townInfos = page.getHtml().xpath("//tr[@class='towntr']").all();
+        List<String> villageInfos = page.getHtml().xpath("//tr[@class='villagetr']").all();
+        List<String[]> result = new ArrayList<String[]>();
+        SpriderAddressDao spriderAddressDao = new SpriderAddressDao();
+        /**
+         * 解析四级区划
+         */
+        String regex = "html\">(\\d+)</a>[\\s\\S]*html\">(.+)</a>";
+        for(String townInfo : townInfos){
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(townInfo);
+            if(matcher.find()){
+                String[] town = new String[2];
+                town[0] = matcher.group(1).trim();
+                town[1] = matcher.group(2).trim();
+                result.add(town);
+            }
+        }
+        /**
+         * 解析五级数据
+         */
+        regex = "<td>(\\d+)[\\s\\S]*<td>(\\d+)[\\s\\S]*<td>(.+)</td>";
+        for(String villageInfo : villageInfos){
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(villageInfo);
+            if(matcher.find()){
+                String[] village  = new String[3];
+                village[0] = matcher.group(1).trim();
+                village[1] = matcher.group(2).trim();
+                village[2] = matcher.group(3).trim();
+                result.add(village);
+            }
+        }
+        /**
+         * 将数据写入数据库
+         */
+        if(result.size() > 0){
+            spriderAddressDao.insertTownVillageData(result);
+        }
 
     }
 
@@ -32,6 +70,7 @@ public class TownAndVillagePageProcessor implements PageProcessor {
     }
 
     public static void main(String[] args) {
-        Spider.create(new TownAndVillagePageProcessor()).addUrl("http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016/index.html").run();
+        Spider.create(new TownAndVillagePageProcessor()).addUrl("http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016/index.html").thread(5).run();
+//        Spider.create(new TownAndVillagePageProcessor()).addUrl("http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016/11/01/02/110102015.html").thread(1).run();
     }
 }
