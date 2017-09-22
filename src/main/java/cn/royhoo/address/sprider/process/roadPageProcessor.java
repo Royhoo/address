@@ -20,7 +20,7 @@ public class roadPageProcessor implements PageProcessor {
     private SpriderAddressDao spriderAddressDao = new SpriderAddressDao();
 
     public void process(Page page) {
-        page.addTargetRequests(page.getHtml().links().regex("http://.+.cityhouse.cn/information/newstreet.*").all());
+        page.addTargetRequests(page.getHtml().links().regex("http://.+.cityhouse.cn/information/newstreet/type/all/page.*").all());
 //        page.addTargetRequests(page.getHtml().links().regex("http://(.+).cityhouse.cn/information/newstreet(.*)").all());
         String city = page.getHtml().xpath("//h2[@class='p_tith3']/text()").get();
         List<String> roads = page.getHtml().xpath("//ul[@class='street_name']/li/a/text()").all();
@@ -41,7 +41,7 @@ public class roadPageProcessor implements PageProcessor {
             String url = "http://"+pinyin[i]+".cityhouse.cn/information/newstreet.html";
             spider.addUrl(url);
         }
-        spider.run();
+        spider.thread(10).run();
     }
 
     /**
