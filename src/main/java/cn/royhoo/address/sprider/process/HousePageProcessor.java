@@ -6,27 +6,39 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author royhoo
- * @date 2017-09-22
+ * @date 2017-09-23
  *
- * 为爬去道路数据，先爬去各城市对应的拼音
+ * 爬取各城市小区
  */
-public class roadPageProcessor implements PageProcessor {
+public class HousePageProcessor implements PageProcessor {
 
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
     private SpriderAddressDao spriderAddressDao = new SpriderAddressDao();
 
     public void process(Page page) {
-        page.addTargetRequests(page.getHtml().links().regex("http://.+.cityhouse.cn/information/newstreet/type/all/page.*").all());
-//        page.addTargetRequests(page.getHtml().links().regex("http://(.+).cityhouse.cn/information/newstreet(.*)").all());
-        String city = page.getHtml().xpath("//h2[@class='p_tith3']/text()").get();
-        List<String> roads = page.getHtml().xpath("//ul[@class='street_name']/li/a/text()").all();
+        /**
+         * 如果是城市的第一页，那么就加入该城市所有的小区url
+         */
+        String url = page.getUrl().toString();
+        if(url.endsWith("halist/")){
+            String pageNumStr = page.getHtml().xpath("//span[@class='number']/text()").get().substring(1);
+            int pageNum = Integer.parseInt(pageNumStr); // 该城市小区页数
+            List<String> urls = new ArrayList<String>();
+            for(int i = 2; i <= pageNum; i++){
+                urls.add(url+"pg"+i+"/");
+            }
+            page.addTargetRequests(urls);
+        }
+        String city = page.getHtml().xpath("//a[@class='city-name']/text()").get();
+        List<String> houses = page.getHtml().xpath("//h4[@class='tit']/a/text()").all();
 
-        if(roads.size() > 0){
-            spriderAddressDao.insertRoadData(roads, city);
+        if(houses.size() > 0){
+            spriderAddressDao.insertHouseData(houses, city);
         }
     }
 
@@ -35,10 +47,10 @@ public class roadPageProcessor implements PageProcessor {
     }
 
     public static void main(String[] args) {
-        Spider spider = Spider.create(new roadPageProcessor());
+        Spider spider = Spider.create(new HousePageProcessor());
         String pinyin[] = getCityPinyin();
         for(int i = 0; i < pinyin.length; i++){
-            String url = "http://"+pinyin[i]+".cityhouse.cn/information/newstreet.html";
+            String url = "http://"+pinyin[i]+".cityhouse.cn/halist/";
             spider.addUrl(url);
         }
         spider.thread(10).run();

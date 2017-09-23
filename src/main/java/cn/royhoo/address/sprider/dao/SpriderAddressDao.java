@@ -124,5 +124,41 @@ public class SpriderAddressDao {
             }
         }
     }
+    /**
+     * 插入小区数据
+     * @param house
+     */
+    public void insertHouseData(List<String> house, String city){
+        Connection conn = JdbcUtil.getConnection();
+        PreparedStatement ps = null;
+        String sql = "INSERT INTO spider_house(city, house) values(?, ?)";
+        try {
+            ps = conn.prepareStatement(sql);
+            int cnt = 0;
+            for(String place : house){
+                ps.setString(1, city);
+                ps.setString(2, place);
+                ps.addBatch();
+                cnt++;
+                if(cnt % 1 == 1000){
+                    ps.executeBatch();
+                    conn.commit();
+                }
+            }
+            if(cnt % 1000 != 0){
+                ps.executeBatch();
+                conn.commit();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                ps.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
