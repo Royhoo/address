@@ -1,18 +1,18 @@
 package segment;
 
-import com.hankcs.hanlp.HanLP;
+import cn.royhoo.address.segment.AddressSegment;
 import org.junit.Test;
 
 /**
  * @author royhoo
  * @date 2017/9/25
  *
- * Hanlp测试类
  */
-public class HanlpTest {
+public class AddressSegmentTest {
     @Test
-    public void testSegment(){
+    public void testAddressSegment(){
         String[] address = {
+                "广东省深圳市福田区深南大道2008号阳光高尔夫大厦16楼1613",
                 "深圳市龙岗区龙翔街道中心城龙翔大道7188号龙岗万科广场4层（吉祥地铁站C出口）",
                 "深圳市龙岗区龙翔大道龙岗中心城世贸中心3层",
                 "深圳市龙岗区龙平东路278号即沃尔玛对面(君盛百货沃尔玛正门对面)",
@@ -47,7 +47,7 @@ public class HanlpTest {
                 "深圳市南山区东滨路城市山林花园一期B-B01（近南山村）",
         };
         for(String addr : address){
-            System.out.println(HanLP.segment(addr));
+            System.out.println(AddressSegment.segment(addr));
         }
     }
 }
