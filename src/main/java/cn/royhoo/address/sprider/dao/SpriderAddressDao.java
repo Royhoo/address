@@ -160,5 +160,40 @@ public class SpriderAddressDao {
             }
         }
     }
-
+    /**
+     * 插入美团地址数据
+     * @param address
+     */
+    public void insertMeituanAddressData(List<String> address, String city){
+        Connection conn = JdbcUtil.getConnection();
+        PreparedStatement ps = null;
+        String sql = "INSERT INTO spider_meituan_address(city, address) values(?, ?)";
+        try {
+            ps = conn.prepareStatement(sql);
+            int cnt = 0;
+            for(String addr : address){
+                ps.setString(1, city);
+                ps.setString(2, addr);
+                ps.addBatch();
+                cnt++;
+                if(cnt % 1 == 1000){
+                    ps.executeBatch();
+                    conn.commit();
+                }
+            }
+            if(cnt % 1000 != 0){
+                ps.executeBatch();
+                conn.commit();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                ps.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
