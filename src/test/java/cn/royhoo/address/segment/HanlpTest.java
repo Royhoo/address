@@ -1,4 +1,4 @@
-package segment;
+package cn.royhoo.address.segment;
 
 import com.hankcs.hanlp.HanLP;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package segment;
+package cn.royhoo.address.segment;
 
 import cn.royhoo.address.segment.AddressSegment;
 import org.junit.Test;
