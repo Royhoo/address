@@ -22,6 +22,7 @@ public class TownAndVillagePageProcessor implements PageProcessor {
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
 
     public void process(Page page) {
+        // TODO: 爬下来的数据存在乱码。例如，区划编码为360821103214的地名就是乱码。感觉很多生僻字都是乱码，有时间需要解决一下。
         page.addTargetRequests(page.getHtml().links().regex("http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016.*").all());
         List<String> townInfos = page.getHtml().xpath("//tr[@class='towntr']").all();
         List<String> villageInfos = page.getHtml().xpath("//tr[@class='villagetr']").all();

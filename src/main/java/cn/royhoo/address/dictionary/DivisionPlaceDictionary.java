@@ -23,12 +23,9 @@ public class DivisionPlaceDictionary {
     // 自动加载词典
     static {
         long start = System.currentTimeMillis();
-        if (!loadDivisionPlaceDictionary(path))
-        {
+        if (!loadDivisionPlaceDictionary(path)) {
             logger.error("区划地名词典" + path + "加载失败");
-        }
-        else
-        {
+        } else {
             logger.info("区划地名词典加载成功:" + dat.size() + "个词条，耗时" + (System.currentTimeMillis() - start) + "ms");
         }
     }
