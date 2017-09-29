@@ -17,7 +17,7 @@ import java.util.TreeMap;
 public class DivisionPlaceDictionary {
     private final static Logger logger = Logger.getLogger(DivisionPlaceDictionary.class);
     private final static String path = Config.DivisionPlaceDictionaryPath;
-    public static DoubleArrayTrie<List<DivisionPlaceDictionary.Attribute>> dat = new DoubleArrayTrie<>();
+    private static DoubleArrayTrie<List<DivisionPlaceDictionary.Attribute>> dat = new DoubleArrayTrie<>();
 
     // 自动加载词典
     static {
@@ -105,6 +105,16 @@ public class DivisionPlaceDictionary {
         }
         return 0;
     }
+
+    /**
+     * 获得地名对应的地名词属性
+     * @param placeName 地名词
+     * @return 地名词属性
+     */
+//    public static List<DivisionPlaceDictionary.Attribute> getPlaceAttributeByName(String placeName){
+//        DivisionPlaceDictionary.Attribute fullNameAttribute = new ArrayList<>();
+//
+//    }
 
     /**
      * 区划地名词属性

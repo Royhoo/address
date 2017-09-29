@@ -19,6 +19,9 @@ public class DivisionPlaceDictionaryTest {
                 "广东",
                 "白云",
                 "长春",
+                "深圳",
+                "田面",
+                "六约社区",
         };
         for(String place : places){
             System.out.println("地名：" + place + "，区划信息" + DivisionPlaceDictionary.dat.get(place));
@@ -26,7 +29,7 @@ public class DivisionPlaceDictionaryTest {
     }
 
     /**
-     * 测试地名简称
+     *
      */
     @Test
     public void testShortName(){
