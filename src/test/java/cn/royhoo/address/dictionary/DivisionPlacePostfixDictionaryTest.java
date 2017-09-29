@@ -2,8 +2,6 @@ package cn.royhoo.address.dictionary;
 
 import org.junit.Test;
 
-import java.util.List;
-
 /**
  * @author royhoo
  * @date 2017/9/28

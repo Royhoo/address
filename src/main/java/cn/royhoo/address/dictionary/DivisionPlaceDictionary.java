@@ -2,7 +2,6 @@ package cn.royhoo.address.dictionary;
 
 import cn.royhoo.address.Config;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
-import com.hankcs.hanlp.corpus.io.IOUtil;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -39,16 +38,18 @@ public class DivisionPlaceDictionary {
             while ((line = br.readLine()) != null){
                 String[] param = line.split("\\s");
                 if (param[0].length() == 0) continue;   // 排除空行
-                List<DivisionPlaceDictionary.Attribute> attributes;
                 DivisionPlaceDictionary.Attribute attribute = new DivisionPlaceDictionary.Attribute(param[0], param[1]);
                 /**
-                 * 如果地名不存在存在，新生成一个地名属性列表。否则，在原因的列表中追加。
+                 * 将地名全称加入map
                  */
-                attributes = map.get(param[1]);
-                if(attributes == null) attributes = new ArrayList<>();
-                attributes.add(attribute);
-
-                map.put(param[1], attributes);
+                addPlaceToMap(param[1], attribute, map);
+                /**
+                 * 如果该地名存在简称，将简称加入map
+                 */
+                List<String> shortNames = DivisionPlacePostfixDictionary.getPlaceShortName(param[1], attribute.placeGrade);
+                for(String shortName : shortNames){
+                    addPlaceToMap(shortName, attribute, map);
+                }
             }
             br.close();
             if(map.size() == 0){
@@ -69,6 +70,17 @@ public class DivisionPlaceDictionary {
         }
 
         return true;
+    }
+
+    private static void addPlaceToMap(String placeName, DivisionPlaceDictionary.Attribute attribute,
+                               TreeMap<String, List<DivisionPlaceDictionary.Attribute>> map) {
+        /**
+         * 如果地名不存在存在，新生成一个地名属性列表。否则，在该地名原有的属性列表中追加。
+         */
+        List<DivisionPlaceDictionary.Attribute> attributes = map.get(placeName);
+        if(attributes == null) attributes = new ArrayList<>();
+        attributes.add(attribute);
+        map.put(placeName, attributes);
     }
 
     /**

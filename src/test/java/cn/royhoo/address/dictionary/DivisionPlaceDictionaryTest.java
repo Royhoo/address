@@ -14,9 +14,14 @@ public class DivisionPlaceDictionaryTest {
                 "广东省",
                 "白云区",
                 "城关镇",
+                "黔东南",
+                "黔东南州",
+                "广东",
+                "白云",
+                "长春",
         };
         for(String place : places){
-            System.out.println(DivisionPlaceDictionary.dat.get(place));
+            System.out.println("地名：" + place + "，区划信息" + DivisionPlaceDictionary.dat.get(place));
         }
     }
 
@@ -26,9 +31,7 @@ public class DivisionPlaceDictionaryTest {
     @Test
     public void testShortName(){
         String[] places = {
-                "广东",
-                "白云",
-                "长春",
+
         };
         for(String place : places){
             System.out.println(DivisionPlaceDictionary.dat.get(place));
