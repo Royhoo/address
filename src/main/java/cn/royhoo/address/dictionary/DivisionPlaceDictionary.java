@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * 区划地名词典
@@ -111,16 +112,57 @@ public class DivisionPlaceDictionary {
      * @param placeName 地名词
      * @return 地名词属性
      */
-//    public static List<DivisionPlaceDictionary.Attribute> getPlaceAttributeByName(String placeName){
-//        DivisionPlaceDictionary.Attribute fullNameAttribute = new ArrayList<>();
-//
-//    }
+    public static List<DivisionPlaceDictionary.Attribute> getPlaceAttributeByName(String placeName){
+        List<DivisionPlaceDictionary.Attribute> result = new ArrayList<>();
+        int uniqueGrade = 0;
+        /**
+         * 获取全称对应的地名属性
+         */
+        List<DivisionPlaceDictionary.Attribute> fullNameAttribute = dat.get(placeName);
+        if(fullNameAttribute != null && fullNameAttribute.size() > 0) {
+            result = fullNameAttribute;
+            /**
+             * 判断该地名的级别是否唯一。如果级别唯一，则将地名级别赋给uniqueGrade。否则，uniqueGrade保持初始值0。
+             */
+            int placeCode = fullNameAttribute.get(0).placeGrade;
+            for (int i = 1; i < fullNameAttribute.size(); i++){
+                if(placeCode != fullNameAttribute.get(i).placeGrade){
+                    placeCode = 0;
+                    break;
+                }
+            }
+            uniqueGrade = placeCode;
+        }
+        /**
+         * 找到地名对应的最短简称，并查询该简称对应的地名属性
+         */
+        List<String> shortNames = DivisionPlacePostfixDictionary.getPlaceShortName(placeName);
+        if(shortNames != null && shortNames.size() > 0){
+            shortNames.sort((String s1, String s2) -> (s1.length() - s2.length()));
+            String shortestName = shortNames.get(0);
+            List<DivisionPlaceDictionary.Attribute> shortNameAttribute = dat.get(shortestName);
+            if(shortNameAttribute != null && shortNameAttribute.size() > 0) {
+                if(uniqueGrade > 0){
+                    /**
+                     * 根据全称查到的地名信息，地名级别是唯一的，返回结果中只保留与该级别匹配的地名
+                     * 例如：查询“广东省”对应的地名，查询结果中不应存在“广东村”这种数据
+                     */
+                    for(DivisionPlaceDictionary.Attribute attribute : shortNameAttribute){
+                        if(uniqueGrade == attribute.placeGrade) result.add(attribute);
+                    }
+                } else{
+                    result.addAll(shortNameAttribute);
+                }
+            }
+        }
+
+        return result.stream().distinct().collect(Collectors.toList());
+    }
 
     /**
      * 区划地名词属性
      */
     static public class Attribute implements Serializable{
-        // 待完善
         /**
          * 区划编码
          */

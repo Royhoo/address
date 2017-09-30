@@ -16,6 +16,10 @@ public class DivisionPlaceDictionaryTest {
                 "城关镇",
                 "黔东南",
                 "黔东南州",
+                "高要市",
+                "长春市",
+                "吉林省",
+                "吉林",
                 "广东",
                 "白云",
                 "长春",
@@ -24,7 +28,7 @@ public class DivisionPlaceDictionaryTest {
                 "六约社区",
         };
         for(String place : places){
-            System.out.println("地名：" + place + "，区划信息" + DivisionPlaceDictionary.dat.get(place));
+            System.out.println("地名：" + place + "，区划信息" + DivisionPlaceDictionary.getPlaceAttributeByName(place));
         }
     }
 
@@ -37,7 +41,6 @@ public class DivisionPlaceDictionaryTest {
 
         };
         for(String place : places){
-            System.out.println(DivisionPlaceDictionary.dat.get(place));
         }
     }
 }
