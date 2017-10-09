@@ -198,49 +198,4 @@ public class DivisionPlaceDictionary {
 
     }
 
-    /**
-     * 区划地名搜索工具
-     */
-    public class DivisionPlaceSearcher{
-        /**
-         * 传入的字符数组
-         */
-        private char[] charArray;
-        /**
-         * 起始位置
-         */
-        private int offset;
-        private DoubleArrayTrie<List<DivisionPlaceDictionary.Attribute>>.Searcher searcher;
-
-        public DivisionPlaceSearcher(int offset, char[] charArray){
-            this.offset = offset;
-            this.charArray = charArray;
-            this.searcher = dat.getSearcher(charArray, offset);
-        }
-
-        /**
-         * 取下一个命中输出
-         */
-        public boolean next(){
-            /**
-             * 当前偏移量
-             */
-            int presentOffset = offset;
-            /**
-             * 上次偏移量
-             */
-            int lastOffset = offset;
-            while (searcher.next()){
-                presentOffset = searcher.begin;
-
-            }
-            return false;
-        }
-    }
-
-    public DivisionPlaceSearcher getSearcher(char[] text, int offset)
-    {
-        return new DivisionPlaceSearcher(offset, text);
-    }
-
 }
