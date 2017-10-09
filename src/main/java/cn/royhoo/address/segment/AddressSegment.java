@@ -1,5 +1,6 @@
 package cn.royhoo.address.segment;
 
+import cn.royhoo.address.recognition.DivisionPlaceRecognition;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
@@ -28,19 +29,18 @@ public class AddressSegment extends ViterbiSegment {
      */
     public List<Vertex> segSentenceToVertex(char[] sentence)
     {
-//        long start = System.currentTimeMillis();
         WordNet wordNetAll = new WordNet(sentence);
-        ////////////////生成词网////////////////////
         GenerateWordNet(wordNetAll);
-        ///////////////生成词图////////////////////
-//        System.out.println("构图：" + (System.currentTimeMillis() - start));
         if (HanLP.Config.DEBUG)
         {
             System.out.printf("粗分词网：\n%s\n", wordNetAll);
         }
-//        start = System.currentTimeMillis();
+
+        // 区划地名识别
+        DivisionPlaceRecognition.Recognition(wordNetAll);
+
+
         List<Vertex> vertexList = viterbi(wordNetAll);
-//        System.out.println("最短路：" + (System.currentTimeMillis() - start));
 
         if (config.useCustomDictionary)
         {

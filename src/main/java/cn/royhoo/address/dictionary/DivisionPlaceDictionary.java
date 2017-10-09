@@ -17,8 +17,14 @@ import java.util.stream.Collectors;
  */
 public class DivisionPlaceDictionary {
     private final static Logger logger = Logger.getLogger(DivisionPlaceDictionary.class);
+    /**
+     * 区划地名词典路径
+     */
     private final static String path = Config.DivisionPlaceDictionaryPath;
-    private static DoubleArrayTrie<List<DivisionPlaceDictionary.Attribute>> dat = new DoubleArrayTrie<>();
+    /**
+     * 区划地名词典
+     */
+    public static DoubleArrayTrie<List<DivisionPlaceDictionary.Attribute>> dat = new DoubleArrayTrie<>();
 
     // 自动加载词典
     static {
@@ -190,6 +196,42 @@ public class DivisionPlaceDictionary {
             return placeCode + " " + placeName + " " + placeGrade;
         }
 
+    }
+
+    /**
+     * 区划地名搜索工具
+     */
+    public class DivisionPlaceSearcher{
+        /**
+         * 传入的字符数组
+         */
+        private char[] charArray;
+        /**
+         * 起始位置
+         */
+        private int offset;
+        private DoubleArrayTrie<List<DivisionPlaceDictionary.Attribute>>.Searcher searcher;
+
+        public DivisionPlaceSearcher(int offset, char[] charArray){
+            this.offset = offset;
+            this.charArray = charArray;
+            this.searcher = dat.getSearcher(charArray, offset);
+        }
+
+        /**
+         * 取下一个命中输出
+         */
+        public boolean next(){
+            while (searcher.next()){
+
+            }
+            return false;
+        }
+    }
+
+    public DivisionPlaceSearcher getSearcher(char[] text, int offset)
+    {
+        return new DivisionPlaceSearcher(offset, text);
     }
 
 }

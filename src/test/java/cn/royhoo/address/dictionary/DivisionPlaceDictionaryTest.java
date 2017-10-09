@@ -11,6 +11,8 @@ public class DivisionPlaceDictionaryTest {
     @Test
     public void testDictionary(){
         String[] places = {
+                "香蜜湖",
+                "南区",
                 "广东省",
                 "白云区",
                 "城关镇",
@@ -26,6 +28,7 @@ public class DivisionPlaceDictionaryTest {
                 "深圳",
                 "田面",
                 "六约社区",
+                "香蜜湖街道",
         };
         for(String place : places){
             System.out.println("地名：" + place + "，区划信息" + DivisionPlaceDictionary.getPlaceAttributeByName(place));
