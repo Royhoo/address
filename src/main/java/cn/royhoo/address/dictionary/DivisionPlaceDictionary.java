@@ -222,7 +222,16 @@ public class DivisionPlaceDictionary {
          * 取下一个命中输出
          */
         public boolean next(){
+            /**
+             * 当前偏移量
+             */
+            int presentOffset = offset;
+            /**
+             * 上次偏移量
+             */
+            int lastOffset = offset;
             while (searcher.next()){
+                presentOffset = searcher.begin;
 
             }
             return false;
