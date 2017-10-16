@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
 public class DivisionPlacePostfixDictionary {
     private final static Logger logger = Logger.getLogger(DivisionPlaceDictionary.class);
     private final static String path = Config.DivisionPlacePostfixDictionaryPath;
-    private static Map<String, List<Integer>> dat = new HashMap<>();
+    public static Map<String, List<Integer>> dat = new HashMap<>();
+    public static int longestPostfixLength = 0;   // 后缀的最大长度
     /**
      * 根据级别获取相应地名后缀的字典
      */
@@ -42,6 +43,7 @@ public class DivisionPlacePostfixDictionary {
             while ((line = br.readLine()) != null){
                 String[] param = line.split("\\s");
                 if (param[0].length() == 0) continue;   // 排除空行
+                if (param[0].length() > longestPostfixLength) longestPostfixLength = param[0].length();
                 List<Integer> grades = new ArrayList<>();
                 for(int i = 1; i < param.length; i++){
                     grades.add(Integer.parseInt(param[i]));

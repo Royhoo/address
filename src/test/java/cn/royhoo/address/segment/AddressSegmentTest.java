@@ -34,6 +34,8 @@ public class AddressSegmentTest {
         String[] address = {
                 "香蜜湖街道",
                 "香蜜湖街道办",
+                "大木罗村",
+                "大木罗社区",
         };
         for(String str : address){
             System.out.println(AddressSegment.segment(str));
