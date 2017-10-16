@@ -13,6 +13,8 @@ public class AddressSegmentTest {
     public void testAddressSegment(){
         String[] address = {
                 "青岛市南",
+                "深圳市南",
+                "深圳市南山",
                 "青岛市南区",
                 "深圳市南山区深南大道9028号华侨城威尼斯酒店旁益田假日广场3层",
                 "香蜜湖街道办事处",

@@ -31,9 +31,9 @@ public class DivisionPlaceRecognition {
         DoubleArrayTrie<List<DivisionPlaceDictionary.Attribute>>.Searcher searcher = DivisionPlaceDictionary.dat.getSearcher(charArray, 0);
         while (searcher.next())
         {
-            List<DivisionPlaceDictionary.Attribute> DivisionPlaceAttribute = searcher.value;
-            int grade = DivisionPlaceDictionary.getPlaceGradeFromAttributes(DivisionPlaceAttribute).get(0);
-            wordNetAll.add(searcher.begin + 1, new Vertex(Predefine.TAG_PLACE, new String(charArray, searcher.begin, searcher.length), getAttributeByGrade(grade), WORD_ID));
+            List<DivisionPlaceDictionary.Attribute> divisionPlaceAttributes = searcher.value;
+            int grade = DivisionPlaceDictionary.getPlaceGradeFromAttributes(divisionPlaceAttributes).get(0);
+            wordNetAll.addReplaceOld(searcher.begin + 1, new Vertex(Predefine.TAG_PLACE, new String(charArray, searcher.begin, searcher.length), getAttributeByGrade(grade), WORD_ID, divisionPlaceAttributes));
         }
         return true;
     }

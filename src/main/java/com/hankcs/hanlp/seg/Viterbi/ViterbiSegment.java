@@ -9,7 +9,7 @@
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
  */
-package com.hanks.hanlp.seg.Viterbi;
+package com.hankcs.hanlp.seg.Viterbi;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;

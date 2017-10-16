@@ -1,18 +1,15 @@
 package cn.royhoo.address.segment;
 
+import cn.royhoo.address.dictionary.DivisionPlaceDictionary;
 import cn.royhoo.address.recognition.DivisionPlaceRecognition;
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.dictionary.other.CharTable;
-import com.hankcs.hanlp.recognition.nr.JapanesePersonRecognition;
 import com.hankcs.hanlp.recognition.nr.PersonRecognition;
-import com.hankcs.hanlp.recognition.nr.TranslatedPersonRecognition;
 import com.hankcs.hanlp.recognition.ns.PlaceRecognition;
 import com.hankcs.hanlp.recognition.nt.OrganizationRecognition;
-import com.hankcs.hanlp.seg.WordBasedGenerativeModelSegment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.Vertex;
 import com.hankcs.hanlp.seg.common.WordNet;
-import com.hanks.hanlp.seg.Viterbi.ViterbiSegment;
+import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -110,6 +107,12 @@ public class AddressSegment extends ViterbiSegment {
         for (Vertex node : nodes[1])
         {
             node.updateFrom(nodes[0].getFirst());
+            // 如果首词具有一级地名词属性，直接设置区划属性为该一级地名词的区划属性
+            List<DivisionPlaceDictionary.Attribute> firstGradeAttributes = DivisionPlaceDictionary.getAttributesByGrade(node.maybeDivisionPlaceAttributes, 1);
+            if (firstGradeAttributes.size() > 0) node.divisionPlaceAttribute = firstGradeAttributes.get(0);
+            // 如果首词具有二级地名词属性，直接设置区划属性为该二级地名词的区划属性
+            List<DivisionPlaceDictionary.Attribute> secondGradeAttributes = DivisionPlaceDictionary.getAttributesByGrade(node.maybeDivisionPlaceAttributes, 1);
+            if (firstGradeAttributes.size() > 0) node.divisionPlaceAttribute = secondGradeAttributes.get(0);
         }
         for (int i = 1; i < nodes.length - 1; ++i)
         {

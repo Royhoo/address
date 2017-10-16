@@ -263,4 +263,19 @@ public class DivisionPlaceDictionary {
         return grades;
     }
 
+    /**
+     * 从属性列表中获取指定级别的属性
+     * @param attributes 地址属性列表
+     * @param grade 级别
+     * @return
+     */
+    public static List<DivisionPlaceDictionary.Attribute> getAttributesByGrade(List<DivisionPlaceDictionary.Attribute> attributes, int grade){
+        List<DivisionPlaceDictionary.Attribute> result = new ArrayList<>();
+        if (attributes == null || attributes.size() == 0) return result;
+        for (DivisionPlaceDictionary.Attribute attribute : attributes){
+            if (attribute.placeGrade == grade) result.add(attribute);
+        }
+        return attributes;
+    }
+
 }
