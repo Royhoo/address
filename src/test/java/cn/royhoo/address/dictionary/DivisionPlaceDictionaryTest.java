@@ -11,6 +11,8 @@ public class DivisionPlaceDictionaryTest {
     @Test
     public void testDictionary(){
         String[] places = {
+                "南区",
+                "北区",
                 "香蜜湖",
                 "南区",
                 "广东省",
@@ -41,9 +43,12 @@ public class DivisionPlaceDictionaryTest {
     @Test
     public void testShortName(){
         String[] places = {
-
+            "广东经济开发区",
+            "深圳开发区",
+            "深圳",
         };
         for(String place : places){
+            System.out.println("地名：" + place + "，区划信息" + DivisionPlaceDictionary.getPlaceAttributeByName(place));
         }
     }
 }

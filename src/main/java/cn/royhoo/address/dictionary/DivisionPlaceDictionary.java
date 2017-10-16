@@ -243,4 +243,24 @@ public class DivisionPlaceDictionary {
         return new DivisionPlaceSearcher(offset, text);
     }
 
+    /**
+     * 获取区划地名属性的级别，去重，并按照一级至五级的顺序排序
+     */
+    public static List<Integer> getPlaceGradeFromAttributes(List<DivisionPlaceDictionary.Attribute> attributes){
+        int[] flags = {0, 0, 0, 0, 0, 0};
+        for (DivisionPlaceDictionary.Attribute attribute : attributes){
+            int grade = attribute.placeGrade;
+            if (grade > 0 && grade <= 5){
+                flags[grade] = 1;
+            }
+        }
+
+        List<Integer> grades = new ArrayList<>();
+        for (int i = 1; i <= 5; i++){
+            if (flags[i] == 1) grades.add(i);
+        }
+
+        return grades;
+    }
+
 }
