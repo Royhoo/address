@@ -109,18 +109,19 @@ public class WordNet
     }
 
     /**
-     * 添加顶点。如果顶点已存在，则替换掉旧的顶点。
+     * 添加顶点。如果顶点已存在，则赋予区划信息。
      *
      * @param line   行号
      * @param vertex 顶点
      */
-    public void addReplaceOld(int line, Vertex vertex)
+    public void addOptimizeOld(int line, Vertex vertex)
     {
         for (int i = 0; i < vertexes[line].size(); i++)
         {
             if (vertexes[line].get(i).realWord.length() == vertex.realWord.length())
             {
-                vertexes[line].set(i, vertex);
+                vertexes[line].get(i).divisionPlaceAttribute = vertex.divisionPlaceAttribute;
+                vertexes[line].get(i).maybeDivisionPlaceAttributes = vertex.maybeDivisionPlaceAttributes;
                 return;
             }
         }

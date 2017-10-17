@@ -286,21 +286,56 @@ public class DivisionPlaceDictionary {
      */
     public static List<DivisionPlaceDictionary.Attribute[]> getMatchDivisionPlaceAttribute(List<DivisionPlaceDictionary.Attribute> parentAttributes,
             List<DivisionPlaceDictionary.Attribute> childAttributes){
-        List<DivisionPlaceDictionary.Attribute[]> result = new ArrayList<>();
-        if (parentAttributes == null || childAttributes == null) return result;
+        List<DivisionPlaceDictionary.Attribute[]> matchedPlaces = new ArrayList<>();
+        if (parentAttributes == null || childAttributes == null) return matchedPlaces;
+        /**
+         * 查找匹配的上下级区划
+         */
         for (DivisionPlaceDictionary.Attribute parentAttribute : parentAttributes){
             String parentPlaceCode = parentAttribute.placeCode;
             for (DivisionPlaceDictionary.Attribute childAttribute : childAttributes){
                 String childPlaceCode = childAttribute.placeCode;
-                if (childPlaceCode.startsWith(parentPlaceCode)){
+                if (childPlaceCode.startsWith(parentPlaceCode)){    // 找到了匹配的区划
                     DivisionPlaceDictionary.Attribute[] attributes = new DivisionPlaceDictionary.Attribute[2];
                     attributes[0] = parentAttribute;
                     attributes[1] = childAttribute;
-                    result.add(attributes);
+                    matchedPlaces.add(attributes);
                 }
             }
         }
-        return result;
+
+
+        /**
+         * 匹配到的数据需要去重。以“深圳南山”为例，
+         * 深圳下面存在“南山区”、“南山街道办事处”、“南山居委会”。遇到这种情况，只需返回“深圳-南山区”这一匹配结果即可
+         */
+        if (matchedPlaces.size() > 0){
+            /**
+             * 所有已匹配的数据中，父级是否唯一的标识。0表示不唯一，1表示唯一。
+             */
+            int isParentUniquenessFlag = 1;
+            /**
+             * 级别最高的子级在数组中的序号(注意，一级地名级别最低，五级最低)
+             */
+            int highestChild = 0;
+            DivisionPlaceDictionary.Attribute parentAttribute = matchedPlaces.get(0)[0];
+            for (int i = 1; i < matchedPlaces.size(); i++){
+                if (!matchedPlaces.get(i)[0].placeCode.equals(parentAttribute.placeCode)){
+                    isParentUniquenessFlag = 0;
+                    break;
+                }
+                if (matchedPlaces.get(i)[1].placeGrade < matchedPlaces.get(highestChild)[1].placeGrade){
+                    highestChild = i;
+                }
+            }
+            if (isParentUniquenessFlag == 1){
+                List<DivisionPlaceDictionary.Attribute[]> result = new ArrayList<>();
+                result.add(matchedPlaces.get(highestChild));
+                return result;
+            }
+        }
+
+        return matchedPlaces;
     }
 
 }

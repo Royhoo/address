@@ -33,7 +33,7 @@ public class DivisionPlaceRecognition {
         {
             List<DivisionPlaceDictionary.Attribute> divisionPlaceAttributes = searcher.value;
             int grade = DivisionPlaceDictionary.getPlaceGradeFromAttributes(divisionPlaceAttributes).get(0);
-            wordNetAll.addReplaceOld(searcher.begin + 1, new Vertex(Predefine.TAG_PLACE, new String(charArray, searcher.begin, searcher.length), getAttributeByGrade(grade), WORD_ID, divisionPlaceAttributes));
+            wordNetAll.addOptimizeOld(searcher.begin + 1, new Vertex(Predefine.TAG_PLACE, new String(charArray, searcher.begin, searcher.length), getAttributeByGrade(grade), WORD_ID, divisionPlaceAttributes));
         }
         return true;
     }

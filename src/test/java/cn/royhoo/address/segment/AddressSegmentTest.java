@@ -11,12 +11,12 @@ import org.junit.Test;
 public class AddressSegmentTest {
     @Test
     public void testAddressSegment(){
+        // TODO:下一步要进行地名和地名关键字的合并了
         String[] address = {
-                // @TODO "街道"不能成词
+                "深圳市南山",
                 "深圳市福田区香蜜湖街道",
                 "青岛市南",
                 "深圳市南",
-                "深圳市南山",
                 "青岛市南区",
                 "深圳市南山区深南大道9028号华侨城威尼斯酒店旁益田假日广场3层",
                 "香蜜湖街道办事处",

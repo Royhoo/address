@@ -136,14 +136,12 @@ public class AddressSegment extends ViterbiSegment {
         return vertexList;
     }
 
-    public static List<Term> segment(String address){
+    public static List<Vertex> segment(String address){
         char[] text = address.toCharArray();
         AddressSegment segment = new AddressSegment();
         List<Vertex> vertexs = segment.segSentenceToVertex(text);
-        /**
-         * 针对地址的优化
-         */
-
-        return convert(vertexs);
+        vertexs.remove(0);
+        vertexs.remove(vertexs.size() - 1);
+        return vertexs;
     }
 }
