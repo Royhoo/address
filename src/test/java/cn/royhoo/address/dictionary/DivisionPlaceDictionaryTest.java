@@ -31,6 +31,7 @@ public class DivisionPlaceDictionaryTest {
                 "田面",
                 "六约社区",
                 "香蜜湖街道",
+                "街道",
         };
         for(String place : places){
             System.out.println("地名：" + place + "，区划信息" + DivisionPlaceDictionary.getPlaceAttributeByName(place));

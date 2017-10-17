@@ -89,6 +89,49 @@ public class Vertex
         }
     }
 
+    // 更新时考虑区划关系
+    public void updateFromWithDivisionPlaceRelation(com.hankcs.hanlp.seg.common.Vertex from)
+    {
+        double value = MathTools.calculateWeight(from, this);
+        /**
+         * 如果from和this都是区划地名，则需要考虑区划地名的匹配
+         */
+        if (from.maybeDivisionPlaceAttributes != null && this.maybeDivisionPlaceAttributes != null)
+        {
+            List<DivisionPlaceDictionary.Attribute[]> matchedAttributes = DivisionPlaceDictionary.getMatchDivisionPlaceAttribute(from.maybeDivisionPlaceAttributes,
+                    this.maybeDivisionPlaceAttributes);
+            // 暂时只考虑刚好只有一对区划匹配的情形
+            if (matchedAttributes != null && matchedAttributes.size() == 1)
+            {
+                DivisionPlaceDictionary.Attribute fatherAttribute = matchedAttributes.get(0)[0];
+                DivisionPlaceDictionary.Attribute childAttribute = matchedAttributes.get(0)[1];
+                int placeGradeGap = childAttribute.placeGrade - fatherAttribute.placeGrade;  // 区划级别间隔
+                if (placeGradeGap == 1){    // 刚好相差一级，说明关系非常紧密
+                    value = 0.01 * value;
+                } else if (placeGradeGap == 2){
+                    value = 0.1 * value;
+                }
+                from.divisionPlaceAttribute = fatherAttribute;
+                from.maybeDivisionPlaceAttributes.clear();
+                from.maybeDivisionPlaceAttributes.add(fatherAttribute);
+                this.divisionPlaceAttribute = childAttribute;
+                this.maybeDivisionPlaceAttributes.clear();
+                this.maybeDivisionPlaceAttributes.add(childAttribute);
+            }
+            else if (matchedAttributes == null || matchedAttributes.size() == 0)
+            {
+                value = 10 * value;
+            }
+        }
+
+        double weight = from.weight + value;
+        if (this.from == null || this.weight > weight)
+        {
+            this.from = from;
+            this.weight = weight;
+        }
+    }
+
     /**
      * 最复杂的构造函数
      *
@@ -497,7 +540,9 @@ public class Vertex
     @Override
     public String toString()
     {
-        return realWord;
+        String str = realWord;
+        if (divisionPlaceAttribute != null) str = str + "/" + divisionPlaceAttribute.placeCode;
+        return str;
 //        return "WordNode{" +
 //                "word='" + word + '\'' +
 //                (word.equals(realWord) ? "" : (", realWord='" + realWord + '\'')) +

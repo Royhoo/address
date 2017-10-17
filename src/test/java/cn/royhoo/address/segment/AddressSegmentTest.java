@@ -12,6 +12,8 @@ public class AddressSegmentTest {
     @Test
     public void testAddressSegment(){
         String[] address = {
+                // @TODO "街道"不能成词
+                "深圳市福田区香蜜湖街道",
                 "青岛市南",
                 "深圳市南",
                 "深圳市南山",
@@ -20,7 +22,6 @@ public class AddressSegmentTest {
                 "香蜜湖街道办事处",
                 "枣庄市中区",
                 "深圳市龙岗区布吉路布吉老街时代广场3楼",
-                "深圳市福田区香蜜湖街道",
         };
         for(String str : address){
             System.out.println(AddressSegment.segment(str));

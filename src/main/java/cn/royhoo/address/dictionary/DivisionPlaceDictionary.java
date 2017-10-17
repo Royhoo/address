@@ -278,4 +278,29 @@ public class DivisionPlaceDictionary {
         return attributes;
     }
 
+    /**
+     * 输入父级地名属性集合和子级地名属性集合，获取其中区划相匹配的地名属性
+     * @param parentAttributes 父级地名属性
+     * @param childAttributes 子级地名属性
+     * @return
+     */
+    public static List<DivisionPlaceDictionary.Attribute[]> getMatchDivisionPlaceAttribute(List<DivisionPlaceDictionary.Attribute> parentAttributes,
+            List<DivisionPlaceDictionary.Attribute> childAttributes){
+        List<DivisionPlaceDictionary.Attribute[]> result = new ArrayList<>();
+        if (parentAttributes == null || childAttributes == null) return result;
+        for (DivisionPlaceDictionary.Attribute parentAttribute : parentAttributes){
+            String parentPlaceCode = parentAttribute.placeCode;
+            for (DivisionPlaceDictionary.Attribute childAttribute : childAttributes){
+                String childPlaceCode = childAttribute.placeCode;
+                if (childPlaceCode.startsWith(parentPlaceCode)){
+                    DivisionPlaceDictionary.Attribute[] attributes = new DivisionPlaceDictionary.Attribute[2];
+                    attributes[0] = parentAttribute;
+                    attributes[1] = childAttribute;
+                    result.add(attributes);
+                }
+            }
+        }
+        return result;
+    }
+
 }

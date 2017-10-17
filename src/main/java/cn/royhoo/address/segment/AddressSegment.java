@@ -106,13 +106,13 @@ public class AddressSegment extends ViterbiSegment {
         LinkedList<Vertex> vertexList = new LinkedList<Vertex>();
         for (Vertex node : nodes[1])
         {
-            node.updateFrom(nodes[0].getFirst());
             // 如果首词具有一级地名词属性，直接设置区划属性为该一级地名词的区划属性
             List<DivisionPlaceDictionary.Attribute> firstGradeAttributes = DivisionPlaceDictionary.getAttributesByGrade(node.maybeDivisionPlaceAttributes, 1);
             if (firstGradeAttributes.size() > 0) node.divisionPlaceAttribute = firstGradeAttributes.get(0);
             // 如果首词具有二级地名词属性，直接设置区划属性为该二级地名词的区划属性
             List<DivisionPlaceDictionary.Attribute> secondGradeAttributes = DivisionPlaceDictionary.getAttributesByGrade(node.maybeDivisionPlaceAttributes, 1);
             if (firstGradeAttributes.size() > 0) node.divisionPlaceAttribute = secondGradeAttributes.get(0);
+            node.updateFrom(nodes[0].getFirst());
         }
         for (int i = 1; i < nodes.length - 1; ++i)
         {
@@ -123,7 +123,7 @@ public class AddressSegment extends ViterbiSegment {
                 if (node.from == null) continue;
                 for (Vertex to : nodes[i + node.realWord.length()])
                 {
-                    to.updateFrom(node);
+                    to.updateFromWithDivisionPlaceRelation(node);
                 }
             }
         }
