@@ -87,4 +87,30 @@ public class DivisionPlacePostfixDictionaryTest {
             }
         }
     }
+
+    /**
+     * 获取地名后缀
+     */
+    @Test
+    public void testGetDivisionPlacePostfix(){
+        String[] placeNemes = {
+                "广东省",
+                "福田区",
+        };
+        for(String placeNeme : placeNemes){
+            System.out.println(placeNeme + "：" + DivisionPlacePostfixDictionary.getDivisionPlacePostfix(placeNeme));
+        }
+    }
+
+    @Test
+    public void testGetStartsWithPostfixGrade(){
+        String[] strs = {
+                "街道办事处侨香",
+                "区香蜜湖街道",
+                "市福田区",
+        };
+        for(String str : strs){
+            System.out.println(str + "：" + DivisionPlacePostfixDictionary.getStartsWithPostfixGrade(str));
+        }
+    }
 }

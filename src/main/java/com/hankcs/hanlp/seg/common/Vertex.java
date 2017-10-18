@@ -118,10 +118,6 @@ public class Vertex
                 this.maybeDivisionPlaceAttributes.clear();
                 this.maybeDivisionPlaceAttributes.add(childAttribute);
             }
-            else if (matchedAttributes == null || matchedAttributes.size() == 0)
-            {
-                value = 10 * value;
-            }
         }
 
         double weight = from.weight + value;

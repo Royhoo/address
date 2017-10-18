@@ -85,9 +85,11 @@ public class DivisionPlaceDictionary {
          * 如果地名不存在存在，新生成一个地名属性列表。否则，在该地名原有的属性列表中追加。
          */
         List<DivisionPlaceDictionary.Attribute> attributes = map.get(placeName);
-        if(attributes == null) attributes = new ArrayList<>();
+        if(attributes == null) {
+            attributes = new ArrayList<>();
+            map.put(placeName, attributes);
+        }
         attributes.add(attribute);
-        map.put(placeName, attributes);
     }
 
     /**

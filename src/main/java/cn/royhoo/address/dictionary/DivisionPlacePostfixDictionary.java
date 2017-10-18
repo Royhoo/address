@@ -75,8 +75,7 @@ public class DivisionPlacePostfixDictionary {
             List<Integer> grades = entry.getValue();
             for(int grade : grades){
                 for(int j = datGradeToStr.size(); j <= grade; j++){
-                    List<String> placePostfixs = new ArrayList<>();
-                    datGradeToStr.add(placePostfixs);
+                    datGradeToStr.add(new ArrayList<>());
                 }
                 datGradeToStr.get(grade).add(placePostfix);
                 // 将所有的地名后缀添加在grade为0的位置
@@ -181,4 +180,41 @@ public class DivisionPlacePostfixDictionary {
         return shortNames;
     }
 
+    /**
+     * 获取区划地名的后缀。如果不存在则返回null。
+     * @param placeName 待获取后缀的地名
+     * @return String
+     */
+    public static String getDivisionPlacePostfix(String placeName){
+        if (placeName == null) return null;
+        String postfix = null;
+        List<String> placePostfixs = getPlacePostfixByGrade(0);
+        for(String placePostfix : placePostfixs){
+            if (placeName.endsWith(placePostfix)) {
+                postfix = placePostfix;
+                break;
+            }
+        }
+        return postfix;
+    }
+
+    /**
+     * 获取一个字符串中，从起始位置开始，存在的长度最长的后缀。
+     * @param str
+     * @return List<Integer> 其中，第一个位置是该后缀的长度，从第二个位置开始，存在该后缀的级别
+     */
+    public static List<Integer> getStartsWithPostfixGrade(String str){
+        List<Integer> result = new ArrayList<>();
+        if (str == null) return result;
+        List<String> placePostfixs = getPlacePostfixByGrade(0);
+        for(String placePostfix : placePostfixs){
+            if (str.startsWith(placePostfix)) {
+                result.add(placePostfix.length());
+                result.addAll(dat.get(placePostfix));
+                break;
+            }
+        }
+
+        return result;
+    }
 }
