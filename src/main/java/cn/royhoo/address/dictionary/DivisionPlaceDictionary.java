@@ -277,7 +277,7 @@ public class DivisionPlaceDictionary {
         for (DivisionPlaceDictionary.Attribute attribute : attributes){
             if (attribute.placeGrade == grade) result.add(attribute);
         }
-        return attributes;
+        return result;
     }
 
     /**

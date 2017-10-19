@@ -40,7 +40,7 @@ public class DivisionPlaceRecognition {
             int grade = DivisionPlaceDictionary.getPlaceGradeFromAttributes(divisionPlaceAttributes).get(0);
             wordNetAll.addOptimizeOld(searcher.begin + 1, new Vertex(Predefine.TAG_PLACE, new String(charArray, searcher.begin, searcher.length), getAttributeByGrade(grade), WORD_ID, divisionPlaceAttributes));
             
-            if (lastBegin != searcher.begin && (searcher.begin + searcher.length < charArray.length)){
+            if (lastBegin != searcher.begin && (lastBegin + lastLength < charArray.length)){
                 /**
                  * 如果上一个区划词没有后缀，则需要判断改词之后是否存在后缀，以及上一区划词能否与其后的后缀合并。
                  * 例如，区划词典加载了“香蜜湖”，但是没加载“香蜜湖街道”。下面的代码就是要识别出“香蜜湖街道”。
@@ -54,8 +54,8 @@ public class DivisionPlaceRecognition {
                                 new String(charArray, lastBegin, lastLength + postfixInfo.get(0)), getAttributeByGrade(postfixInfo.get(1)), WORD_ID, newDivisionPlaceAttributes));
                     }
                 }
-                lastBegin = searcher.begin;
             }
+            lastBegin = searcher.begin;
             lastLength = searcher.length;
             lastAttributes = searcher.value;
         }

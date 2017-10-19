@@ -12,6 +12,7 @@
 package com.hankcs.hanlp.seg.common;
 
 import cn.royhoo.address.dictionary.DivisionPlaceDictionary;
+import cn.royhoo.address.dictionary.DivisionPlacePostfixDictionary;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.utility.MathTools;
@@ -100,8 +101,15 @@ public class Vertex
         {
             List<DivisionPlaceDictionary.Attribute[]> matchedAttributes = DivisionPlaceDictionary.getMatchDivisionPlaceAttribute(from.maybeDivisionPlaceAttributes,
                     this.maybeDivisionPlaceAttributes);
-            // 暂时只考虑刚好只有一对区划匹配的情形
-            if (matchedAttributes != null && matchedAttributes.size() == 1)
+
+            if (matchedAttributes == null || matchedAttributes.size() == 0) // 区划不匹配，这说明该地名也许是不能成词的
+            {
+                if (DivisionPlacePostfixDictionary.getDivisionPlacePostfix(this.getRealWord()) == null){
+                    // 该地名不以地名后缀结尾，增大分值，降低其成词概率。
+                    value = 10 * value;
+                }
+            }
+            else if (matchedAttributes.size() == 1) // 刚好只有一对区划匹配的情形
             {
                 DivisionPlaceDictionary.Attribute fatherAttribute = matchedAttributes.get(0)[0];
                 DivisionPlaceDictionary.Attribute childAttribute = matchedAttributes.get(0)[1];

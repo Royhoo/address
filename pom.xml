@@ -20,6 +20,11 @@
         </plugins>
     </build>
 
+    <properties>
+        <!--解决maven test命令中文乱码-->
+        <argLine>-Dfile.encoding=UTF-8</argLine>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
