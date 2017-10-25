@@ -1,5 +1,6 @@
 package cn.royhoo.address.segment;
 
+import cn.royhoo.address.Entity.SegmentResult;
 import cn.royhoo.address.segment.AddressSegment;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +30,6 @@ public class AddressSegmentTest {
     public void testDivisionPlaceSegment(){
         // TODO:下一步要进行地名和地名关键字的合并了
         String[] address = {
-                "西藏省",
                 //TODO:“西乡-街道”是个特例，没有合并。是因为“西乡”本身有地名结尾词。
                 "深圳市宝安区西乡街道麻布社区",
                 "深圳市宝安区西乡麻布社区",
@@ -44,12 +44,16 @@ public class AddressSegmentTest {
                 "青岛市南区",
                 "香蜜湖街道办事处",
                 "枣庄市中区",
+                "吉林市经济技术开发区",
+                "西藏省",
         };
         for(String str : address){
-            System.out.println(AddressSegment.segment(str));
+            SegmentResult segmentResult = AddressSegment.segment(str);
+            System.out.println(segmentResult.getVertexs());
         }
-        Assert.assertEquals(AddressSegment.segment("深圳市南").toString(), "[深圳市/4403, 南]");
-        Assert.assertEquals(AddressSegment.segment("青岛市南").toString(), "[青岛/3702, 市南/370202]");
+        Assert.assertEquals(AddressSegment.segment("深圳市南").getVertexs().toString(), "[深圳市/4403, 南]");
+        Assert.assertEquals(AddressSegment.segment("青岛市南").getVertexs().toString(), "[青岛/3702, 市南/370202]");
+        Assert.assertEquals(AddressSegment.segment("深圳市宝安区西乡街道麻布社区").getVertexs().toString(), "[深圳市/4403, 宝安区/440306, 西乡街道/440306003, 麻布社区/440306003012]");
     }
 
     /**
@@ -65,7 +69,7 @@ public class AddressSegmentTest {
                 "大木罗社区",
         };
         for(String str : address){
-            System.out.println(AddressSegment.segment(str));
+            System.out.println(AddressSegment.segment(str).getVertexs());
         }
     }
 }

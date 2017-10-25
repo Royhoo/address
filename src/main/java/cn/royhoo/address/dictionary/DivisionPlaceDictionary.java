@@ -340,4 +340,25 @@ public class DivisionPlaceDictionary {
         return matchedPlaces;
     }
 
+    /**
+     * 输入父级地名属性和子集地名属性集合，返回与之对应的子集地名属性集合
+     * @param parentAttribute 父级地名属性
+     * @param childAttributes 子集地名属性集合
+     * @return
+     */
+    public static List<DivisionPlaceDictionary.Attribute> getMatchDivisionPlaceAttribute(DivisionPlaceDictionary.Attribute parentAttribute,
+                                                                                           List<DivisionPlaceDictionary.Attribute> childAttributes){
+        List<DivisionPlaceDictionary.Attribute[]> matchedPlaces;
+        List<DivisionPlaceDictionary.Attribute> matchedChildren = new ArrayList<>();
+        List<DivisionPlaceDictionary.Attribute> parentAttributes = new ArrayList<>();
+        parentAttributes.add(parentAttribute);
+        matchedPlaces = getMatchDivisionPlaceAttribute(parentAttributes, childAttributes);
+        if (matchedPlaces != null){
+            for (DivisionPlaceDictionary.Attribute[] matchedPlace : matchedPlaces){
+                matchedChildren.add(matchedPlace[1]);
+            }
+        }
+        return matchedChildren;
+    }
+
 }

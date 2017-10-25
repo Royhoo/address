@@ -1,5 +1,6 @@
 package cn.royhoo.address.segment;
 
+import cn.royhoo.address.Entity.SegmentResult;
 import cn.royhoo.address.dictionary.DivisionPlaceDictionary;
 import cn.royhoo.address.recognition.DivisionPlaceRecognition;
 import com.hankcs.hanlp.HanLP;
@@ -23,10 +24,10 @@ import java.util.List;
 public class AddressSegment extends ViterbiSegment {
     /**
      * Hanlp自带的segSentence方法返回的是List<Term>，所含信息太少，不利于进一步优化。所以增加一个方法，返回List<Vertex>。
-     * add by royhoo
      */
-    public List<Vertex> segSentenceToVertex(char[] sentence)
+    public SegmentResult segSentenceToVertex(char[] sentence)
     {
+        SegmentResult segmentResult = new SegmentResult();
         WordNet wordNetAll = new WordNet(sentence);
         GenerateWordNet(wordNetAll);
         if (HanLP.Config.DEBUG)
@@ -38,7 +39,7 @@ public class AddressSegment extends ViterbiSegment {
         DivisionPlaceRecognition.Recognition(wordNetAll);
 
 
-        List<Vertex> vertexList = divisionPlaceViterbi(wordNetAll);
+        List<Vertex> vertexList = divisionPlaceViterbi(wordNetAll, segmentResult);
 
         if (config.useCustomDictionary)
         {
@@ -96,27 +97,37 @@ public class AddressSegment extends ViterbiSegment {
             speechTagging(vertexList);
         }
 
-        return vertexList;
+        vertexList.remove(0);
+        vertexList.remove(vertexList.size() - 1);
+        segmentResult.setWordNetAll(wordNetAll);
+        segmentResult.setVertexs(vertexList);
+        return segmentResult;
     }
 
     // 增加了区划地名识别的Viterbi
-    protected static List<Vertex> divisionPlaceViterbi(WordNet wordNet){
-        // 避免生成对象，优化速度
+    protected static List<Vertex> divisionPlaceViterbi(WordNet wordNet, SegmentResult segmentResult){
         LinkedList<Vertex> nodes[] = wordNet.getVertexes();
         LinkedList<Vertex> vertexList = new LinkedList<Vertex>();
+        DivisionPlaceDictionary.Attribute clearDivisionAttribute = null;  // 已明确的，最具体的区划信息
         for (Vertex node : nodes[1])
         {
             // 如果首词具有一级地名词属性，直接设置区划属性为该一级地名词的区划属性
             List<DivisionPlaceDictionary.Attribute> firstGradeAttributes = DivisionPlaceDictionary.getAttributesByGrade(node.maybeDivisionPlaceAttributes, 1);
             if (firstGradeAttributes.size() > 0){
                 node.divisionPlaceAttribute = firstGradeAttributes.get(0);
+                clearDivisionAttribute = firstGradeAttributes.get(0);
             } else{
                 // 如果首词具有二级地名词属性，直接设置区划属性为该二级地名词的区划属性
                 List<DivisionPlaceDictionary.Attribute> secondGradeAttributes = DivisionPlaceDictionary.getAttributesByGrade(node.maybeDivisionPlaceAttributes, 2);
-                if (secondGradeAttributes.size() > 0) node.divisionPlaceAttribute = secondGradeAttributes.get(0);
+                if (secondGradeAttributes.size() > 0){
+                    node.divisionPlaceAttribute = secondGradeAttributes.get(0);
+                    clearDivisionAttribute = secondGradeAttributes.get(0);
+                }
             }
+            // 如果当前节点只有一个区划编码，说明该节点的区划编码是确定的，可以对该节点赋予区划编码。（比如“广东省”这个词，不需要上下文环境，足以确定唯一的区划编码）
             if (node.divisionPlaceAttribute == null && node.maybeDivisionPlaceAttributes != null && node.maybeDivisionPlaceAttributes.size() == 1){
                 node.divisionPlaceAttribute = node.maybeDivisionPlaceAttributes.get(0);
+                clearDivisionAttribute = node.maybeDivisionPlaceAttributes.get(0);
             }
             node.updateFrom(nodes[0].getFirst());
         }
@@ -128,11 +139,12 @@ public class AddressSegment extends ViterbiSegment {
             {
                 if (node.divisionPlaceAttribute == null && node.maybeDivisionPlaceAttributes != null && node.maybeDivisionPlaceAttributes.size() == 1){
                     node.divisionPlaceAttribute = node.maybeDivisionPlaceAttributes.get(0);
+                    clearDivisionAttribute = node.maybeDivisionPlaceAttributes.get(0);
                 }
                 if (node.from == null) continue;
                 for (Vertex to : nodes[i + node.realWord.length()])
                 {
-                    to.updateFromWithDivisionPlaceRelation(node);
+                    clearDivisionAttribute = to.updateFromWithDivisionPlaceRelation(node, clearDivisionAttribute);
                 }
             }
         }
@@ -142,15 +154,14 @@ public class AddressSegment extends ViterbiSegment {
             vertexList.addFirst(from);
             from = from.from;
         }
+        segmentResult.setClearDivisionAttribute(clearDivisionAttribute);
         return vertexList;
     }
 
-    public static List<Vertex> segment(String address){
+    public static SegmentResult segment(String address){
         char[] text = address.toCharArray();
         AddressSegment segment = new AddressSegment();
-        List<Vertex> vertexs = segment.segSentenceToVertex(text);
-        vertexs.remove(0);
-        vertexs.remove(vertexs.size() - 1);
-        return vertexs;
+        SegmentResult segmentResult = segment.segSentenceToVertex(text);
+        return segmentResult;
     }
 }

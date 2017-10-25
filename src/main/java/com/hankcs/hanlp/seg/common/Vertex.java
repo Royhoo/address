@@ -18,11 +18,13 @@ import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.utility.MathTools;
 import com.hankcs.hanlp.utility.Predefine;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
+import static cn.royhoo.address.util.Predefine.*;
 /**
  * 顶点
  *
@@ -91,8 +93,9 @@ public class Vertex
     }
 
     // 更新时考虑区划关系
-    public void updateFromWithDivisionPlaceRelation(com.hankcs.hanlp.seg.common.Vertex from)
+    public DivisionPlaceDictionary.Attribute updateFromWithDivisionPlaceRelation(com.hankcs.hanlp.seg.common.Vertex from, DivisionPlaceDictionary.Attribute clearDivisionAttribute)
     {
+        boolean matchedFlag = false;    // 前后term区划是否匹配
         double value = MathTools.calculateWeight(from, this);
         /**
          * 如果from和this都是区划地名，则需要考虑区划地名的匹配
@@ -102,22 +105,23 @@ public class Vertex
             List<DivisionPlaceDictionary.Attribute[]> matchedAttributes = DivisionPlaceDictionary.getMatchDivisionPlaceAttribute(from.maybeDivisionPlaceAttributes,
                     this.maybeDivisionPlaceAttributes);
 
-            if (matchedAttributes == null || matchedAttributes.size() == 0) // 区划不匹配，这说明该地名也许是不能成词的
+            if (matchedAttributes == null || matchedAttributes.size() == 0) // 区划不匹配，这说明该地名(尤其是没有以地名后缀结尾的小地名)也许是不能成词的
             {
                 if (DivisionPlacePostfixDictionary.getDivisionPlacePostfix(this.getRealWord()) == null){
                     // 该地名不以地名后缀结尾，增大分值，降低其成词概率。
-                    value = 10 * value;
+                    value = VALUE_RATIO_UNMATCHED * value;
                 }
             }
             else if (matchedAttributes.size() == 1) // 刚好只有一对区划匹配的情形
             {
+                matchedFlag = true;
                 DivisionPlaceDictionary.Attribute fatherAttribute = matchedAttributes.get(0)[0];
                 DivisionPlaceDictionary.Attribute childAttribute = matchedAttributes.get(0)[1];
                 int placeGradeGap = childAttribute.placeGrade - fatherAttribute.placeGrade;  // 区划级别间隔
                 if (placeGradeGap == 1){    // 刚好相差一级，说明关系非常紧密
-                    value = 0.01 * value;
+                    value = VALUE_RATIO_MATCHED_DIFFER_ONE * value;
                 } else if (placeGradeGap == 2){
-                    value = 0.1 * value;
+                    value = VALUE_RATIO_MATCHED_DIFFER_TWO * value;
                 }
                 from.divisionPlaceAttribute = fatherAttribute;
                 from.maybeDivisionPlaceAttributes.clear();
@@ -125,6 +129,21 @@ public class Vertex
                 this.divisionPlaceAttribute = childAttribute;
                 this.maybeDivisionPlaceAttributes.clear();
                 this.maybeDivisionPlaceAttributes.add(childAttribute);
+                clearDivisionAttribute = childAttribute;
+            }
+        }
+        /**
+         * 如果from和this不能做到区划匹配（也许from根本就不是个区划词），但是this的区划与clearDivisionAttribute相匹配，则可以看对this赋予区划
+         */
+        if (!matchedFlag && this.maybeDivisionPlaceAttributes != null && clearDivisionAttribute != null)
+        {
+            List<DivisionPlaceDictionary.Attribute> matchedChildren = DivisionPlaceDictionary.getMatchDivisionPlaceAttribute(clearDivisionAttribute,
+                    this.maybeDivisionPlaceAttributes);
+            if (matchedChildren != null && matchedChildren.size() == 1){
+                this.divisionPlaceAttribute = matchedChildren.get(0);
+                this.maybeDivisionPlaceAttributes.clear();
+                this.maybeDivisionPlaceAttributes.add(matchedChildren.get(0));
+                clearDivisionAttribute = matchedChildren.get(0);
             }
         }
 
@@ -134,6 +153,8 @@ public class Vertex
             this.from = from;
             this.weight = weight;
         }
+
+        return clearDivisionAttribute;
     }
 
     /**
