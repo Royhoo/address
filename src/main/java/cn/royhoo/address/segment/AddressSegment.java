@@ -161,7 +161,6 @@ public class AddressSegment extends ViterbiSegment {
     public static SegmentResult segment(String address){
         char[] text = address.toCharArray();
         AddressSegment segment = new AddressSegment();
-        SegmentResult segmentResult = segment.segSentenceToVertex(text);
-        return segmentResult;
+        return segment.segSentenceToVertex(text);
     }
 }
