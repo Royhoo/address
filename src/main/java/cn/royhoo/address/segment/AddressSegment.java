@@ -125,10 +125,17 @@ public class AddressSegment extends ViterbiSegment {
                 }
             }
             // 如果当前节点只有一个区划编码，说明该节点的区划编码是确定的，可以对该节点赋予区划编码。（比如“广东省”这个词，不需要上下文环境，足以确定唯一的区划编码）
-            if (node.divisionPlaceAttribute == null && node.maybeDivisionPlaceAttributes != null && node.maybeDivisionPlaceAttributes.size() == 1){
-                node.divisionPlaceAttribute = node.maybeDivisionPlaceAttributes.get(0);
-                clearDivisionAttribute = node.maybeDivisionPlaceAttributes.get(0);
-            }
+//            if (node.divisionPlaceAttribute == null && node.maybeDivisionPlaceAttributes != null
+//                    && node.maybeDivisionPlaceAttributes.size() == 1 && node.divisionPlaceAttribute == null){
+//                /**
+//                 * 需要加一个限制：改词是一二三级地名词的话，才设置区划
+//                 */
+//                int placeGrade = node.maybeDivisionPlaceAttributes.get(0).placeGrade;
+//                if (placeGrade >= 1 && placeGrade <= 3){
+//                    node.divisionPlaceAttribute = node.maybeDivisionPlaceAttributes.get(0);
+//                    clearDivisionAttribute = node.maybeDivisionPlaceAttributes.get(0);
+//                }
+//            }
             node.updateFrom(nodes[0].getFirst());
         }
         for (int i = 1; i < nodes.length - 1; ++i)
@@ -138,8 +145,14 @@ public class AddressSegment extends ViterbiSegment {
             for (Vertex node : nodeArray)
             {
                 if (node.divisionPlaceAttribute == null && node.maybeDivisionPlaceAttributes != null && node.maybeDivisionPlaceAttributes.size() == 1){
-                    node.divisionPlaceAttribute = node.maybeDivisionPlaceAttributes.get(0);
-                    clearDivisionAttribute = node.maybeDivisionPlaceAttributes.get(0);
+                    /**
+                     * 需要加一个限制：改词是一二三级地名词的话，才设置区划
+                     */
+                    int placeGrade = node.maybeDivisionPlaceAttributes.get(0).placeGrade;
+                    if (placeGrade >= 1 && placeGrade <= 3){
+                        node.divisionPlaceAttribute = node.maybeDivisionPlaceAttributes.get(0);
+                        clearDivisionAttribute = node.maybeDivisionPlaceAttributes.get(0);
+                    }
                 }
                 if (node.from == null) continue;
                 for (Vertex to : nodes[i + node.realWord.length()])

@@ -133,9 +133,9 @@ public class Vertex
             }
         }
         /**
-         * 如果from和this不能做到区划匹配（也许from根本就不是个区划词），但是this的区划与clearDivisionAttribute相匹配，则可以看对this赋予区划
+         * 如果from和this不能做到区划匹配（也许from根本就不是个区划词），但是this的区划与clearDivisionAttribute相匹配，则可以对this赋予区划
          */
-        if (!matchedFlag && this.maybeDivisionPlaceAttributes != null && clearDivisionAttribute != null)
+        if (!matchedFlag && this.maybeDivisionPlaceAttributes != null && clearDivisionAttribute != null && this.divisionPlaceAttribute == null)
         {
             List<DivisionPlaceDictionary.Attribute> matchedChildren = DivisionPlaceDictionary.getMatchDivisionPlaceAttribute(clearDivisionAttribute,
                     this.maybeDivisionPlaceAttributes);

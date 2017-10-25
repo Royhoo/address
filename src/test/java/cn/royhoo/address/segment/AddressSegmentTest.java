@@ -12,6 +12,13 @@ import org.junit.Test;
  */
 public class AddressSegmentTest {
     @Test
+    public void testForDebug(){
+        String address = "深圳市龙华新区清湖村和平东路66号四季大厦1-8楼";
+        SegmentResult segmentResult = AddressSegment.segment(address);
+        System.out.println(segmentResult);
+    }
+
+    @Test
     public void testAddressSegment(){
         // TODO:下一步要进行地名和地名关键字的合并了
         String[] address = {
