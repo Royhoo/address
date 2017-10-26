@@ -124,10 +124,10 @@ public class Vertex
                     value = VALUE_RATIO_MATCHED_DIFFER_TWO * value;
                 }
                 from.divisionPlaceAttribute = fatherAttribute;
-                from.maybeDivisionPlaceAttributes.clear();
+                from.maybeDivisionPlaceAttributes = new ArrayList<>();
                 from.maybeDivisionPlaceAttributes.add(fatherAttribute);
                 this.divisionPlaceAttribute = childAttribute;
-                this.maybeDivisionPlaceAttributes.clear();
+                this.maybeDivisionPlaceAttributes = new ArrayList<>();
                 this.maybeDivisionPlaceAttributes.add(childAttribute);
                 clearDivisionAttribute = childAttribute;
             }
@@ -141,7 +141,7 @@ public class Vertex
                     this.maybeDivisionPlaceAttributes);
             if (matchedChildren != null && matchedChildren.size() == 1){
                 this.divisionPlaceAttribute = matchedChildren.get(0);
-                this.maybeDivisionPlaceAttributes.clear();
+                this.maybeDivisionPlaceAttributes = new ArrayList<>();
                 this.maybeDivisionPlaceAttributes.add(matchedChildren.get(0));
                 clearDivisionAttribute = matchedChildren.get(0);
             }

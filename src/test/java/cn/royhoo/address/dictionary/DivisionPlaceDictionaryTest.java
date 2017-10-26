@@ -34,6 +34,7 @@ public class DivisionPlaceDictionaryTest {
                 "街道",
                 "北京",
                 "北京市",
+                "一路",
         };
         for(String place : places){
             System.out.println("地名：" + place + "，区划信息" + DivisionPlaceDictionary.getPlaceAttributeByName(place));
