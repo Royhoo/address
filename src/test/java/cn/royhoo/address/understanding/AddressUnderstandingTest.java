@@ -12,6 +12,7 @@ public class AddressUnderstandingTest {
     @Test
     public void testSynonymPostfix(){
         String[] address = {
+                "深圳市宝安区西乡街道麻布社区泰然一路13号市公安局家属楼1栋2单元301",
                 "深圳市宝安区西乡街道麻布社区",
                 "深圳市宝安区浪心村11号老乡村酒楼旁",
                 "深圳市宝安区新安四路198号宝立方B座一楼",
@@ -20,10 +21,11 @@ public class AddressUnderstandingTest {
                 "深圳市宝安区松白路汽车站配套大楼3楼（星港城对面）",
                 "深圳市龙华新区清湖村和平东路66号四季大厦1-8楼",
                 "梧州市新兴一路68号北京华联超市新兴店F1层",
-//                "北京市朝阳区朝阳大悦城对面佳亿青年汇四层",
-//                "北京市朝阳区工体北路8号院三里屯SOHO2号商场B1层B1-216",
-//                "北京市朝阳区三里屯工体北路4号院66栋",
-//                "北京市昌平区宏福大道温都水城广场1层",
+                "吉林公主岭国家农业科技园区环岭乡迎新村一屯",
+                "北京市朝阳区朝阳大悦城对面佳亿青年汇四层",
+                "北京市朝阳区工体北路8号院三里屯SOHO2号商场B1层B1-216",
+                "北京市朝阳区三里屯工体北路4号院66栋",
+                "北京市昌平区宏福大道温都水城广场1层",
         };
         for(String str : address){
             System.out.println(AddressUnderstanding.understanding(str).getVertexs());

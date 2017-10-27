@@ -2,12 +2,21 @@ package cn.royhoo.address.dictionary;
 
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * @author royhoo
  * @date 2017/9/27
  * 区划地名词典测试类
  */
 public class DivisionPlaceDictionaryTest {
+    @Test
+    public void testForDubug(){
+        String place = "迎新村";
+        List<DivisionPlaceDictionary.Attribute> attributes = DivisionPlaceDictionary.getPlaceAttributeByName(place);
+        System.out.println(attributes);
+    }
+
     @Test
     public void testDictionary(){
         String[] places = {

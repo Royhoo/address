@@ -53,8 +53,8 @@ public class AddressSegmentTest {
                 "枣庄市中区",
                 "吉林市经济技术开发区",
                 "西藏省",
-                "白云区三元里",
-                "白云区艳山红",
+                "白云区三元里",   // 这个是广州市的白云区
+                "白云区艳山红",   // 这个是贵阳市的白云区
         };
         for(String str : address){
             SegmentResult segmentResult = AddressSegment.segment(str);
