@@ -125,6 +125,7 @@ public class WordNet
                 return;
             }
         }
+        vertex.divisionRecognition = true;
         vertexes[line].add(vertex);
         ++size;
     }

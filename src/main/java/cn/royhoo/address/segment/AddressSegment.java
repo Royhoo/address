@@ -59,38 +59,6 @@ public class AddressSegment extends ViterbiSegment {
             mergeNumberQuantifier(vertexList, wordNetAll, config);
         }
 
-        // 实体命名识别
-        if (config.ner)
-        {
-            WordNet wordNetOptimum = new WordNet(sentence, vertexList);
-            int preSize = wordNetOptimum.size();
-            if (config.nameRecognize)
-            {
-                PersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
-            }
-            if (config.placeRecognize)
-            {
-                PlaceRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
-            }
-            if (config.organizationRecognize)
-            {
-                // 层叠隐马模型——生成输出作为下一级隐马输入
-                vertexList = viterbi(wordNetOptimum);
-                wordNetOptimum.clear();
-                wordNetOptimum.addAll(vertexList);
-                preSize = wordNetOptimum.size();
-                OrganizationRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
-            }
-            if (wordNetOptimum.size() != preSize)
-            {
-                vertexList = viterbi(wordNetOptimum);
-                if (HanLP.Config.DEBUG)
-                {
-                    System.out.printf("细分词网：\n%s\n", wordNetOptimum);
-                }
-            }
-        }
-
         // 是否标注词性
         if (config.speechTagging)
         {
@@ -149,7 +117,7 @@ public class AddressSegment extends ViterbiSegment {
                      * 需要加一个限制：改词是一二三级地名词的话，才设置区划
                      */
                     int placeGrade = node.maybeDivisionPlaceAttributes.get(0).placeGrade;
-                    if (placeGrade >= 1 && placeGrade <= 3){
+                    if (placeGrade >= 1 && placeGrade <= 2){
                         node.divisionPlaceAttribute = node.maybeDivisionPlaceAttributes.get(0);
                         clearDivisionAttribute = node.maybeDivisionPlaceAttributes.get(0);
                     }

@@ -81,6 +81,10 @@ public class Vertex
      * 区划地名属性
      */
     public DivisionPlaceDictionary.Attribute divisionPlaceAttribute;
+    /**
+     * 是否来自区划地名识别并且不存在与核心词库
+     */
+    public boolean divisionRecognition = false;
 
     public void updateFrom(com.hankcs.hanlp.seg.common.Vertex from)
     {
@@ -109,7 +113,12 @@ public class Vertex
             {
                 if (DivisionPlacePostfixDictionary.getDivisionPlacePostfix(this.getRealWord()) == null){
                     // 该地名不以地名后缀结尾，增大分值，降低其成词概率。
-                    value = VALUE_RATIO_UNMATCHED * value;
+                    List<Integer> grades = DivisionPlaceDictionary.getPlaceGradeFromAttributes(this.maybeDivisionPlaceAttributes);
+                    if (grades.get(0) <= 4){
+                        value = VALUE_RATIO_UNMATCHED_TINY_PLACE * value;
+                    }else{
+                        value = VALUE_RATIO_UNMATCHED * value;
+                    }
                 }
             }
             else if (matchedAttributes.size() == 1) // 刚好只有一对区划匹配的情形

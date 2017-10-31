@@ -62,7 +62,7 @@ public class DivisionPlaceRecognition {
 
         if (lastAttributes != null && (lastBegin + lastLength < charArray.length)){
             /**
-             * 如果上一个区划词没有后缀，则需要判断改词之后是否存在后缀，以及上一区划词能否与其后的后缀合并。
+             * 如果上一个区划词没有后缀，则需要判断该词之后是否存在后缀，以及上一区划词能否与其后的后缀合并。
              * 例如，区划词典加载了“香蜜湖”，但是没加载“香蜜湖街道”。下面的代码就是要识别出“香蜜湖街道”。
              */
             if (DivisionPlacePostfixDictionary.getDivisionPlacePostfix(new String(charArray, lastBegin, lastLength)) == null){  // 上一区划词不含后缀
