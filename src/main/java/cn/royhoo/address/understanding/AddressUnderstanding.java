@@ -3,6 +3,7 @@ package cn.royhoo.address.understanding;
 import cn.royhoo.address.Entity.SegmentResult;
 import cn.royhoo.address.Entity.UnderstandingResult;
 import cn.royhoo.address.segment.AddressSegment;
+import cn.royhoo.address.understanding.preproccess.PreProcess;
 import com.hankcs.hanlp.seg.common.Vertex;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public class AddressUnderstanding {
         AddressSegment segment = new AddressSegment();
         SegmentResult segmentResult = segment.segSentenceToVertex(text);
         List<Vertex> vertices = segmentResult.getVertexs();
+
+        PreProcess.preProcess(vertices);
 
         understandingResult.setVertexs(vertices);
         understandingResult.setAddress(address);

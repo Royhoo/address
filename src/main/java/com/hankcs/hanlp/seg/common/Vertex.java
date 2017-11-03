@@ -13,6 +13,7 @@ package com.hankcs.hanlp.seg.common;
 
 import cn.royhoo.address.dictionary.DivisionPlaceDictionary;
 import cn.royhoo.address.dictionary.DivisionPlacePostfixDictionary;
+import cn.royhoo.address.understanding.tag.AR;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.utility.MathTools;
@@ -85,6 +86,18 @@ public class Vertex
      * 是否来自区划地名识别并且不存在与核心词库
      */
     public boolean divisionRecognition = false;
+    /**
+     * 地址角色
+     */
+    public AR ar = null;
+
+    /**
+     * 判断该节点的角色是否为地名
+     * @return
+     */
+    public boolean isPlaceRole(){
+        return ar != null && ar.isPlaceRole();
+    }
 
     public void updateFrom(com.hankcs.hanlp.seg.common.Vertex from)
     {
